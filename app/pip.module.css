@@ -1,0 +1,798 @@
+/* ─── Commander Pip · compact comic guide ─────────────────── */
+
+.guide {
+  position: fixed;
+  z-index: 55;
+  bottom: clamp(6px, 1.4vh, 16px);
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.left {
+  left: clamp(8px, 1.4vw, 18px);
+}
+
+.right {
+  right: clamp(8px, 1.4vw, 18px);
+  flex-direction: row-reverse;
+}
+
+.astroWrap {
+  position: relative;
+  flex: none;
+  pointer-events: auto;
+}
+
+/* Sunburst behind Pip: cheap, bold, and very comic-book. */
+.astroWrap::before {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  top: 2%;
+  left: -14%;
+  width: 128%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: repeating-conic-gradient(
+    from 0deg,
+    rgba(245, 181, 68, 0.55) 0deg 6deg,
+    rgba(245, 181, 68, 0) 6deg 13deg
+  );
+  -webkit-mask-image: radial-gradient(circle, #000 44%, transparent 70%);
+  mask-image: radial-gradient(circle, #000 44%, transparent 70%);
+  opacity: 0.55;
+  animation: pipSunburst 28s linear infinite;
+  pointer-events: none;
+}
+
+.astroButton {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: clamp(182px, 16vw, 216px);
+  height: clamp(247px, 21.7vw, 293px);
+  padding: 0;
+  border-radius: 26px;
+  background: transparent;
+  filter: drop-shadow(0 16px 20px rgba(0, 0, 0, 0.5));
+}
+
+.astroButton:focus-visible {
+  outline: 3px solid var(--amber);
+  outline-offset: 4px;
+}
+
+/* Smaller presence where the page is already busy (the field guide). */
+.compact .astroButton {
+  width: clamp(146px, 12.4vw, 174px);
+  height: clamp(198px, 16.8vw, 236px);
+}
+
+.compact .astroTag {
+  font-size: 8px;
+}
+
+.astroGlow {
+  position: absolute;
+  inset: -8% -10% 8%;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 38% 46%, rgba(110, 231, 249, 0.18), transparent 46%),
+    radial-gradient(circle at 58% 54%, rgba(245, 181, 68, 0.3), transparent 64%);
+  animation: pipGlow 5.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.astro {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  /* Four offset shadows fake a fat ink outline around the whole suit. */
+  filter:
+    drop-shadow(1.8px 0 0 #0b0d12)
+    drop-shadow(-1.8px 0 0 #0b0d12)
+    drop-shadow(0 1.8px 0 #0b0d12)
+    drop-shadow(0 -1.8px 0 #0b0d12)
+    drop-shadow(7px 8px 0 rgba(0, 0, 0, 0.42));
+  animation: pipBob 6s ease-in-out infinite;
+}
+
+.pipFace {
+  transform-origin: 140px 88px;
+  transform-box: view-box;
+  transition: transform 0.2s ease;
+}
+
+.astroButton:hover .pipFace,
+.astroWaveOn .pipFace {
+  transform: translateY(-1px) rotate(-2deg) scale(1.035);
+}
+
+.armWave {
+  transform-origin: 192px 156px;
+  transform-box: view-box;
+}
+
+.astroWaveOn .armWave,
+.astroButton:hover .armWave {
+  animation: pipWave 0.6s ease-in-out 4;
+}
+
+.lamp {
+  animation: pipLamp 2.4s ease-in-out infinite;
+}
+
+.antenna {
+  animation: pipLamp 1.8s ease-in-out infinite;
+}
+
+.astroEnter {
+  animation: astroArriveRight 1.4s cubic-bezier(0.14, 0.9, 0.2, 1) both;
+}
+
+.left .astroEnter {
+  animation-name: astroArriveLeft;
+}
+
+.astroTag {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%) rotate(-2deg);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border: 2.5px solid #0b0d12;
+  border-radius: 4px;
+  background: var(--amber);
+  color: #14100a;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: 3px 3px 0 #0b0d12;
+}
+
+.astroTagDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #14100a;
+  animation: pipLamp 2s ease-in-out infinite;
+}
+
+.pill {
+  position: absolute;
+  top: 20%;
+  left: calc(100% - 6px);
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  width: max-content;
+  padding: 7px 11px;
+  border: 3px solid #0b0d12;
+  border-radius: 9px;
+  background: #fff6c9;
+  color: #14100a;
+  box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.55);
+  animation: pipNudge 4.4s ease-in-out infinite;
+}
+
+.right .pill {
+  left: auto;
+  right: calc(100% - 6px);
+}
+
+.pill::after {
+  content: '';
+  position: absolute;
+  top: 15px;
+  left: -7px;
+  width: 13px;
+  height: 13px;
+  background: #fff6c9;
+  border-left: 3px solid #0b0d12;
+  border-bottom: 3px solid #0b0d12;
+  transform: rotate(45deg);
+}
+
+.right .pill::after {
+  left: auto;
+  right: -7px;
+  border-left: 0;
+  border-bottom: 0;
+  border-right: 3px solid #0b0d12;
+  border-top: 3px solid #0b0d12;
+}
+
+.pill strong {
+  font-size: 13.5px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.pill span {
+  font-family: var(--font-mono);
+  font-size: 6.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(20, 16, 10, 0.62);
+  white-space: nowrap;
+}
+
+.burst {
+  position: absolute;
+  top: -16px;
+  left: -38px;
+  z-index: 4;
+  width: 128px;
+  pointer-events: none;
+  animation: burstPop 2s cubic-bezier(0.2, 0.9, 0.2, 1) both;
+}
+
+.right .burst {
+  left: auto;
+  right: -30px;
+}
+
+.burst svg {
+  display: block;
+  width: 100%;
+  filter: drop-shadow(4px 5px 0 rgba(0, 0, 0, 0.42));
+}
+
+.burst span {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding-bottom: 6px;
+  color: #0b0d12;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 700;
+  font-style: italic;
+  letter-spacing: -0.03em;
+  transform: rotate(-8deg);
+}
+
+/* ─── Compact comic panel ─────────────────────────────────── */
+.bubble {
+  position: relative;
+  pointer-events: auto;
+  width: 344px;
+  max-height: min(62vh, 470px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 3px solid #0b0d12;
+  border-radius: 10px;
+  background: #f7efdd;
+  color: #14100a;
+  box-shadow:
+    8px 8px 0 rgba(0, 0, 0, 0.76),
+    0 26px 60px rgba(0, 0, 0, 0.5);
+}
+
+.bubble::after {
+  content: '';
+  position: absolute;
+  bottom: 44px;
+  left: -9px;
+  width: 16px;
+  height: 16px;
+  background: #f7efdd;
+  border-left: 3px solid #0b0d12;
+  border-bottom: 3px solid #0b0d12;
+  transform: rotate(45deg);
+}
+
+.right .bubble::after {
+  left: auto;
+  right: -9px;
+  border-left: 0;
+  border-bottom: 0;
+  border-right: 3px solid #0b0d12;
+  border-top: 3px solid #0b0d12;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 9px 8px 11px;
+  border-bottom: 3px solid #0b0d12;
+  border-radius: 7px 7px 0 0;
+  background-color: var(--amber);
+  background-image: radial-gradient(rgba(11, 13, 18, 0.18) 1.1px, transparent 1.2px);
+  background-size: 6px 6px;
+}
+
+.headWho {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.headBadge {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex: none;
+  border: 2.5px solid #0b0d12;
+  border-radius: 50%;
+  background: #f7efdd;
+}
+
+.headName {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #14100a;
+}
+
+.headRole {
+  margin: 1px 0 0;
+  font-family: var(--font-mono);
+  font-size: 6.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(20, 16, 10, 0.66);
+  white-space: nowrap;
+}
+
+.iconButton {
+  display: grid;
+  place-items: center;
+  width: 25px;
+  height: 25px;
+  flex: none;
+  border: 2.5px solid #0b0d12;
+  border-radius: 50%;
+  background: #f7efdd;
+  color: #14100a;
+  box-shadow: 2px 2px 0 #0b0d12;
+}
+
+.iconButton:hover {
+  background: #fff;
+}
+
+.body {
+  padding: 12px 13px 13px;
+}
+
+.label {
+  display: inline-block;
+  margin: 0 0 8px;
+  padding: 3px 7px;
+  background: #14100a;
+  color: #f7efdd;
+  font-family: var(--font-mono);
+  font-size: 6.5px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  transform: rotate(-1.5deg);
+}
+
+.copy {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: #1d1710;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 11px;
+}
+
+.speechButton,
+.ghostButton,
+.worldLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 9px;
+  border: 2.5px solid #14100a;
+  border-radius: 6px;
+  background: #fffaf0;
+  color: #14100a;
+  font-family: var(--font-mono);
+  font-size: 7.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-decoration: none;
+  box-shadow: 3px 3px 0 #14100a;
+  transition:
+    background 0.12s ease,
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+.speechButton:hover,
+.ghostButton:hover,
+.worldLink:hover {
+  background: #ffffff;
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 #14100a;
+}
+
+.speechButton:active,
+.ghostButton:active,
+.worldLink:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 #14100a;
+}
+
+.worldLink {
+  background: var(--amber);
+}
+
+.worldMars {
+  background: #ed7958;
+}
+
+.speechOn {
+  background: #bdf3ff;
+}
+
+.badgeIcon {
+  display: block;
+  flex: none;
+}
+
+/* ─── Pip's note inside a field-guide letter ──────────────── */
+.note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 14px 0 18px;
+}
+
+.noteAvatar {
+  position: relative;
+  display: block;
+  flex: none;
+  width: 96px;
+  height: 122px;
+  filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.45));
+}
+
+.noteBubble {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  padding: 11px 12px 12px;
+  border: 3px solid #0b0d12;
+  border-radius: 10px;
+  background: #f7efdd;
+  color: #14100a;
+  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.55);
+}
+
+.noteBubble::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: -8px;
+  width: 13px;
+  height: 13px;
+  background: #f7efdd;
+  border-left: 3px solid #0b0d12;
+  border-bottom: 3px solid #0b0d12;
+  transform: rotate(45deg);
+}
+
+.noteText {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: #1d1710;
+}
+
+.noteBubble .speechButton {
+  margin-top: 9px;
+}
+
+/* ─── Motion ──────────────────────────────────────────────── */
+@keyframes pipBob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-0.5deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(0.7deg);
+  }
+}
+
+@keyframes pipGlow {
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes astroArriveRight {
+  0% {
+    opacity: 0;
+    transform: translateX(125%) rotate(12deg) scale(0.88);
+  }
+  55% {
+    opacity: 1;
+    transform: translateX(-3%) rotate(-2deg) scale(1.03);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes astroArriveLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-125%) rotate(-12deg) scale(0.88);
+  }
+  55% {
+    opacity: 1;
+    transform: translateX(3%) rotate(2deg) scale(1.03);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes burstPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.35) rotate(-16deg);
+  }
+  16% {
+    opacity: 1;
+    transform: scale(1.1) rotate(-6deg);
+  }
+  28% {
+    opacity: 1;
+    transform: scale(1) rotate(-8deg);
+  }
+  78% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.12) translateY(-16px) rotate(-11deg);
+  }
+}
+
+@keyframes pipWave {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  35% {
+    transform: rotate(-15deg);
+  }
+  70% {
+    transform: rotate(6deg);
+  }
+}
+
+@keyframes pipLamp {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@keyframes pipSunburst {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pipNudge {
+  0%,
+  100% {
+    transform: translateX(0) rotate(-1deg);
+  }
+  50% {
+    transform: translateX(4px) rotate(1deg);
+  }
+}
+
+.still .astro,
+.still .astroGlow,
+.still .pill,
+.still .lamp,
+.still .antenna,
+.still .astroTagDot,
+.still .astroEnter,
+.still .astroWrap::before {
+  animation: none !important;
+}
+
+.still .burst {
+  display: none;
+}
+
+/* ─── Mobile ──────────────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .guide {
+    top: 64px;
+    right: 8px;
+    bottom: auto;
+    left: auto;
+    flex-direction: row-reverse;
+    gap: 0;
+  }
+
+  .astroButton {
+    width: 116px;
+    height: 152px;
+  }
+
+  .compact .astroButton {
+    width: 96px;
+    height: 130px;
+  }
+
+  .astroTag {
+    bottom: 0;
+    padding: 3px 7px;
+    font-size: 7px;
+  }
+
+  .guide .pill {
+    top: 8px;
+    right: 104px;
+    left: auto;
+    padding: 6px 9px;
+  }
+
+  .guide .pill::after {
+    top: 13px;
+    right: -7px;
+    left: auto;
+    border: 3px solid #0b0d12;
+    border-left: 0;
+    border-bottom: 0;
+    transform: rotate(45deg);
+  }
+
+  .burst {
+    top: -12px;
+    right: 78px;
+    left: auto;
+    width: 108px;
+  }
+
+  .bubble {
+    position: fixed;
+    right: 10px;
+    bottom: 10px;
+    left: 10px;
+    width: auto;
+    max-height: 62svh;
+    border-radius: 9px;
+    box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.7);
+  }
+
+  .bubble::after {
+    display: none;
+  }
+
+  .note {
+    gap: 8px;
+  }
+
+  .noteAvatar {
+    width: 72px;
+    height: 92px;
+  }
+}
+
+/* Dark space-storybook surfaces keep Pip readable over the planets. */
+.bubble,
+.noteBubble {
+  border-color: rgba(110, 231, 249, 0.42);
+  background: #0b1828;
+  color: #f2f7fc;
+  box-shadow:
+    8px 8px 0 rgba(0, 0, 0, 0.76),
+    0 26px 60px rgba(0, 0, 0, 0.55);
+}
+
+.bubble::after,
+.noteBubble::before {
+  background: #0b1828;
+  border-color: rgba(110, 231, 249, 0.42);
+}
+
+.right .bubble::after {
+  border-color: rgba(110, 231, 249, 0.42);
+  border-left: 0;
+  border-bottom: 0;
+}
+
+.copy,
+.noteText {
+  color: #dbe6f1;
+}
+
+.label {
+  background: #bdf3ff;
+  color: #07111f;
+}
+
+.speechButton,
+.ghostButton {
+  border-color: rgba(255, 255, 255, 0.16);
+  background: #14263a;
+  color: #eaf2f9;
+  box-shadow: 3px 3px 0 #02050a;
+}
+
+.speechButton:hover,
+.ghostButton:hover {
+  background: #1a324a;
+  box-shadow: 4px 4px 0 #02050a;
+}
+
+.speechOn {
+  border-color: rgba(110, 231, 249, 0.5);
+  background: rgba(110, 231, 249, 0.14);
+  color: #9ff4ff;
+}
+
+/* Phones: the compact guide drops below the two-row header and loses its
+   speech pill, which was covering the Moon/Mars switch on the field guide. */
+@media (max-width: 767px) {
+  .compact {
+    top: 112px;
+  }
+
+  .compact .pill {
+    display: none;
+  }
+}
+
+/* Narrow phones: the landing nav becomes two rows (90px), so Pip must sit
+   below it instead of covering the Motion / NASA data controls. */
+@media (max-width: 380px) {
+  .guide:not(.compact) {
+    top: 96px;
+  }
+}
