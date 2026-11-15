@@ -19,3 +19,6 @@ node_modules
 qa/
 freebuff-sites-build/
 .cloud-attachments/
+
+# local tool scratch
+.codex-tmp/
